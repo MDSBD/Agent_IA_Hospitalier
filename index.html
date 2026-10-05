@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Module de formation pour médecins et personnel hospitalier : comprendre, construire et vérifier un agent IA sans code avec Dify.">
+<title>Agents IA en santé · Horizon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0a1f2b;--navy:#102c3c;--deep:#0d2633;--teal:#087e83;--teal2:#2bb3a3;--mint:#7de1c8;--amber:#f2b86b;--ink:#142d3d;--muted:#536a77;--paper:#ffffff;--bg:#f4f7f6;--line:#dbe7e9;--display:'Fraunces',Georgia,'Times New Roman',serif;--sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}img,canvas{display:block}
+.wrap{max-width:1200px;margin:auto;padding:0 28px}
+/* Navigation */
+.topnav{position:fixed;inset:0 0 auto 0;z-index:20;transition:background .3s,box-shadow .3s}.topnav.scrolled{background:#0a1f2bdd;backdrop-filter:blur(14px);box-shadow:0 1px 0 #ffffff14}
+.topnav .wrap{display:flex;align-items:center;gap:28px;height:68px}.brand{font-weight:800;letter-spacing:.5px;color:#fff;text-decoration:none;font-size:18px}.brand span{color:var(--mint)}
+.topnav nav{display:flex;gap:22px}.topnav .brand{margin-right:auto}.topnav nav a{color:#cfe3e8;text-decoration:none;font-size:14px;font-weight:500}.topnav nav a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;transition:transform .2s,box-shadow .2s,background .2s;border:0;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--mint);color:#0a1f2b;box-shadow:0 10px 30px #7de1c833}.btn-primary:hover{box-shadow:0 14px 36px #7de1c855}
+.btn-ghost{background:#ffffff10;color:#fff;border:1px solid #ffffff30}.btn-ghost:hover{background:#ffffff1c}
+.btn-dark{background:var(--navy);color:#fff}.btn-dark:hover{box-shadow:0 12px 28px #102c3c33}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{box-shadow:0 12px 28px #087e8340}
+.btn small{font-weight:500;opacity:.75}
+/* Hero */
+.hero{position:relative;min-height:100vh;background:radial-gradient(1200px 700px at 75% 30%,#164c59 0%,transparent 60%),linear-gradient(160deg,#0a1f2b 0%,#102c3c 55%,#0d3340 100%);color:#fff;overflow:hidden;display:flex;align-items:center;padding:110px 0 70px}
+#bg{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;width:100%}
+.eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:var(--teal);margin:0 0 16px}.hero .eyebrow{color:var(--mint)}
+.hero h1{font-family:var(--display);font-weight:650;font-size:clamp(40px,5.2vw,72px);line-height:1.04;letter-spacing:-1.5px;margin:0 0 24px}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--mint)}
+.hero .sub{font-size:19px;color:#c9dfe5;max-width:560px;margin:0 0 34px}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#ffffff1a;border:1px solid #ffffff1a;border-radius:16px;overflow:hidden;margin-top:44px;max-width:560px}
+.stats div{background:#0d2a38cc;padding:16px 18px}.stats b{display:block;font-family:var(--display);font-size:30px;font-weight:650;color:#fff;line-height:1.1}.stats span{font-size:12px;color:#a9c6ce;letter-spacing:.3px}
+/* Panneau agent */
+.agentpanel{position:relative;border-radius:24px;background:linear-gradient(180deg,#ffffff0d,#ffffff05);border:1px solid #ffffff22;box-shadow:0 30px 80px #00000055,inset 0 1px 0 #ffffff18;padding:18px;backdrop-filter:blur(6px)}
+.agentpanel .bar{display:flex;align-items:center;gap:8px;padding:2px 6px 12px;font-size:12px;color:#a9c6ce}.agentpanel .bar i{width:9px;height:9px;border-radius:50%;background:#ffffff30}.agentpanel .bar i:first-child{background:#f2b86b}.agentpanel .bar span{margin-left:auto;letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+#agent{width:100%;height:340px;border-radius:14px;background:#081a24}
+.feed{display:grid;gap:8px;padding:14px 6px 4px;min-height:112px}
+.feed p{margin:0;font-size:14px;color:#d8eaee;display:flex;gap:10px;align-items:baseline;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}.feed p.on{opacity:1;transform:none}
+.feed p b{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mint);min-width:74px;font-weight:700}
+.feed p.answer b{color:var(--amber)}
+.scrollhint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#a9c6ce;font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px}.scrollhint:after{content:'';width:1px;height:34px;background:linear-gradient(#a9c6ce,transparent);animation:drip 2s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+/* Sections */
+section.block{padding:110px 0}
+.sechead{max-width:760px;margin-bottom:56px}.sechead h2{font-family:var(--display);font-weight:650;font-size:clamp(32px,3.6vw,50px);line-height:1.1;letter-spacing:-.8px;margin:0 0 18px}.sechead p{font-size:19px;color:var(--muted);margin:0}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pillar{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:30px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}.pillar:hover{transform:translateY(-4px);box-shadow:0 20px 40px #102c3c12}
+.pillar .n{font-family:var(--display);font-size:64px;line-height:1;color:#e3efee;position:absolute;right:20px;top:14px;font-weight:650}
+.pillar .ico{width:52px;height:52px;border-radius:14px;background:#dff4ee;display:grid;place-items:center;font-size:24px;margin-bottom:20px}
+.pillar h3{font-size:21px;margin:0 0 8px}.pillar p{margin:0;color:var(--muted);font-size:16px}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:22px}
+.fact{border-top:2px solid var(--teal);padding-top:16px}.fact b{display:block;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:6px}.fact p{margin:0;font-size:15px;color:var(--muted)}
+/* Cartes ressources */
+.resources{background:linear-gradient(180deg,var(--bg),#e9f2f0)}
+.rescards{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.res{background:var(--paper);border-radius:26px;border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 50px #102c3c0d;transition:transform .35s,box-shadow .35s}.res:hover{transform:translateY(-6px);box-shadow:0 30px 70px #102c3c1c}
+.res .cover{position:relative;height:200px;overflow:hidden}.res .cover canvas{position:absolute;inset:0;width:100%;height:100%}
+.res .cover .label{position:absolute;left:26px;bottom:20px;color:#fff}.res .cover .label small{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;opacity:.85}.res .cover .label b{font-family:var(--display);font-size:30px;font-weight:650;line-height:1.1}
+.res .cover .chip{position:absolute;right:20px;top:18px;background:#ffffff22;border:1px solid #ffffff40;color:#fff;font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;backdrop-filter:blur(6px)}
+.cover-p{background:linear-gradient(135deg,#102c3c,#164c59)}.cover-a{background:linear-gradient(135deg,#065f63,#0a8a7f)}
+.res .body{padding:30px;display:flex;flex-direction:column;gap:20px;flex:1}
+.res .body>p{margin:0;color:var(--muted)}
+.meta{display:flex;gap:10px;flex-wrap:wrap}.meta span{font-size:13px;font-weight:600;background:#eef6f5;color:#205e68;padding:6px 12px;border-radius:999px}
+.res ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.res li{display:flex;gap:12px;font-size:15.5px}.res li:before{content:'';flex:0 0 8px;height:8px;border-radius:50%;background:var(--teal2);margin-top:9px}
+.res .go{margin-top:auto;display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding-top:18px;border-top:1px solid var(--line)}
+.res .go .file{font-size:12px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+/* Parcours */
+.journey{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.journey:before{content:'';position:absolute;top:27px;left:6%;right:6%;height:2px;background:linear-gradient(90deg,var(--teal2),var(--mint),var(--amber))}
+.jstep{position:relative;text-align:center;padding:0 8px}.jstep .dot{width:56px;height:56px;border-radius:50%;margin:0 auto 18px;background:var(--paper);border:2px solid var(--teal2);display:grid;place-items:center;font-weight:800;color:var(--teal);font-size:18px;position:relative;z-index:1;box-shadow:0 0 0 8px var(--bg)}
+.jstep h3{font-size:18px;margin:0 0 4px}.jstep .dur{font-size:13px;font-weight:700;color:var(--teal);letter-spacing:.5px}.jstep p{font-size:15px;color:var(--muted);margin:8px 0 0}
+.steps12{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:60px}
+.s12{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;transition:border-color .2s,transform .2s}.s12:hover{border-color:var(--teal2);transform:translateY(-3px)}
+.s12 b{display:block;font-family:var(--display);font-size:22px;color:var(--teal);font-weight:650}.s12 span{display:block;font-size:13.5px;font-weight:600;line-height:1.3;margin:2px 0 6px}.s12 small{font-size:12px;color:var(--muted)}
+.s12.star{background:#fff8ec;border-color:#f2d3a3}.s12.star b{color:#b5761f}
+.legend{font-size:13px;color:var(--muted);margin-top:14px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;background:#fff8ec;border:1px solid #f2d3a3;vertical-align:-1px;margin-right:6px}
+/* Énigme */
+.enigma{background:var(--night);color:#fff;position:relative;overflow:hidden}
+#enigmabg{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.enigma .wrap{position:relative}.enigma .sechead p{color:#b8d2d9}.enigma .eyebrow{color:var(--mint)}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:900px}
+.ans{background:#ffffff0c;border:1px solid #ffffff24;border-radius:20px;padding:28px;text-align:left;color:#fff;font:inherit;cursor:pointer;transition:background .25s,border-color .25s,transform .25s}.ans:hover{background:#ffffff16;transform:translateY(-3px)}
+.ans small{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#a9c6ce;font-weight:700;margin-bottom:10px}.ans q{font-family:var(--display);font-size:24px;line-height:1.3;quotes:'« ' ' »'}
+.ans .verdict{display:block;margin-top:14px;font-size:14px;min-height:22px;color:#a9c6ce}
+.ans.right{border-color:var(--mint);background:#7de1c814}.ans.right .verdict{color:var(--mint)}.ans.wrong{border-color:#f0a77d;background:#f0a77d12}.ans.wrong .verdict{color:#f6c2a3}
+.enigma .reveal{max-width:900px;margin-top:26px;color:#c9dfe5;opacity:0;transition:opacity .5s}.enigma .reveal.on{opacity:1}
+/* Engagements */
+.commit{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.commit div{background:var(--paper);border-radius:18px;border:1px solid var(--line);padding:24px}.commit b{display:block;font-size:17px;margin:12px 0 6px}.commit p{margin:0;font-size:15px;color:var(--muted)}.commit .e{font-size:26px}
+.note{margin-top:34px;padding:18px 22px;border-left:4px solid var(--teal);background:#eaf6f3;border-radius:0 12px 12px 0;font-size:15.5px}
+/* Final */
+.final{background:linear-gradient(135deg,#102c3c,#0d4a52);color:#fff;text-align:center;border-radius:32px;padding:70px 30px;margin:0 28px;position:relative;overflow:hidden}
+.final h2{font-family:var(--display);font-size:clamp(30px,3.4vw,46px);margin:0 0 14px;font-weight:650;letter-spacing:-.6px}.final p{color:#c9dfe5;max-width:620px;margin:0 auto 30px}.final .cta{justify-content:center}
+footer{padding:50px 0 40px;color:var(--muted);font-size:13px}footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+/* Apparition au défilement */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+a:focus-visible,button:focus-visible{outline:3px solid var(--mint);outline-offset:3px;border-radius:12px}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.rv{opacity:1;transform:none;transition:none}.scrollhint:after{animation:none}}
+@media(max-width:1000px){.hero .wrap{grid-template-columns:1fr;gap:40px}.pillars,.rescards{grid-template-columns:1fr}.facts,.commit{grid-template-columns:1fr 1fr}.steps12{grid-template-columns:repeat(3,1fr)}.topnav nav{display:none}}
+@media(max-width:700px){.wrap{padding:0 18px}section.block{padding:76px 0}.stats{grid-template-columns:repeat(2,1fr)}.journey{grid-template-columns:1fr 1fr;row-gap:36px}.journey:before{display:none}.steps12{grid-template-columns:repeat(2,1fr)}.answers,.facts,.commit{grid-template-columns:1fr}#agent{height:280px}.final{margin:0 12px;padding:54px 20px}.scrollhint{display:none}}
+</style>
+</head>
+<body>
+
+<header class="topnav" id="topnav"><div class="wrap"><a class="brand" href="#top">HORIZON <span>/ IA</span></a><nav aria-label="Navigation principale"><a href="#module">Le module</a><a href="#ressources">Présentation &amp; atelier</a><a href="#parcours">Parcours</a><a href="#enigme">L’énigme</a></nav><a class="btn btn-primary" href="Presentation_Agents_IA_Hospitalier_v2.html" style="padding:9px 18px;font-size:14px">Commencer</a></div></header>
+
+<main id="top">
+<section class="hero">
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="wrap">
+<div>
+<p class="eyebrow">Module de formation · Médecins &amp; personnel hospitalier</p>
+<h1>Des assistants IA <em>aux agents</em> : comprendre, construire, vérifier.</h1>
+<p class="sub">Un module en deux temps pour concevoir un agent IA sans écrire de code. On comprend d’abord ce que fait vraiment un modèle de langage, puis on construit et on teste son propre agent dans Dify, comme on validerait un protocole.</p>
+<div class="cta"><a class="btn btn-primary" href="Presentation_Agents_IA_Hospitalier_v2.html">Ouvrir la présentation <small>80 min</small></a><a class="btn btn-ghost" href="Atelier_Agent_IA_Hospitalier_Dify.html">Ouvrir l’atelier <small>6 h 25</small></a></div>
+<div class="stats" aria-label="Chiffres clés"><div><b data-count="22">22</b><span>écrans interactifs</span></div><div><b data-count="12">12</b><span>étapes d’atelier</span></div><div><b data-count="14">14</b><span>tests de validation</span></div><div><b data-count="87">87</b><span>tâches guidées</span></div><div><b data-count="10">10</b><span>prototypes personnels</span></div><div><b>0</b><span>donnée patient réelle</span></div></div>
+</div>
+<div class="agentpanel" role="img" aria-label="Animation : un agent reçoit une question, choisit de consulter la base de procédures, l’annuaire ou les deux, puis produit une réponse sourcée.">
+<div class="bar"><i></i><i></i><i></i><span>Horizon Assistant · en direct</span></div>
+<canvas id="agent"></canvas>
+<div class="feed" aria-live="off"><p id="f-q"><b>Question</b><span></span></p><p id="f-c"><b>Choix</b><span></span></p><p id="f-a" class="answer"><b>Réponse</b><span></span></p></div>
+</div>
+</div>
+<a class="scrollhint" href="#module">Découvrir</a>
+</section>
+
+<section class="block" id="module">
+<div class="wrap">
+<div class="sechead rv"><p class="eyebrow">Le module</p><h2>Comprendre avant de construire, prouver avant de croire.</h2><p>Les modèles de langage rédigent avec aisance, y compris quand ils se trompent. Ce module donne aux professionnels de santé les repères pour concevoir un assistant utile, et surtout pour vérifier chacune de ses réponses.</p></div>
+<div class="pillars">
+<article class="pillar rv d1"><span class="n">01</span><div class="ico">🧠</div><h3>Comprendre</h3><p>Ce que fait un LLM, pourquoi il hallucine, comment une consigne, des sources et des outils changent son comportement.</p></article>
+<article class="pillar rv d2"><span class="n">02</span><div class="ico">🛠️</div><h3>Construire</h3><p>Un agent dans Dify Cloud, sans code : instructions, base documentaire, outil annuaire et publication d’un prototype.</p></article>
+<article class="pillar rv d3"><span class="n">03</span><div class="ico">🔍</div><h3>Vérifier</h3><p>Lire la trace, tester les cas d’absence et les limites, provoquer une panne, puis réparer et rejouer la grille de tests.</p></article>
+</div>
+<div class="facts">
+<div class="fact rv"><b>Public</b><p>Médecins, spécialistes, cadres et personnel administratif hospitalier.</p></div>
+<div class="fact rv d1"><b>Prérequis</b><p>Aucune compétence en programmation. Un ordinateur et un compte Dify Cloud.</p></div>
+<div class="fact rv d2"><b>Format</b><p>Une séance de présentation, puis une journée ou deux demi-journées d’atelier.</p></div>
+<div class="fact rv d3"><b>Groupe</b><p>Dix apprenants, un prototype personnel par participant.</p></div>
+</div>
+</div>
+</section>
+
+<section class="block resources" id="ressources">
+<div class="wrap">
+<div class="sechead rv"><p class="eyebrow">Les deux supports</p><h2>Une présentation pour comprendre, un atelier pour faire.</h2><p>Les deux pages fonctionnent dans le navigateur, sans compte et sans connexion à une IA. Elles partagent le même fil conducteur : Horizon Assistant, un agent administratif sur des documents entièrement fictifs.</p></div>
+<div class="rescards">
+<article class="res rv d1">
+<div class="cover cover-p"><canvas data-cover="slides" aria-hidden="true"></canvas><span class="chip">Partie 1</span><div class="label"><small>Présentation interactive</small><b>Des assistants IA aux agents</b></div></div>
+<div class="body">
+<div class="meta"><span>22 écrans</span><span>≈ 80 min</span><span>Parcours essentiel : 15 écrans</span></div>
+<p>Une séance vivante qui part d’une énigme : deux réponses crédibles, une seule vraie. Les participants découvrent le moteur, la consigne, les sources, les outils et la preuve, à travers des démonstrations et des jeux.</p>
+<ul><li>Démonstration en direct d’une hallucination, avec simulation de secours</li><li>Glossaire en analogies cliniques et « diagnostic différentiel » d’une mauvaise réponse</li><li>Générateur de consigne, jeu « assistant, workflow ou agent ? » et quiz final</li><li>Mode projection, notes du formateur, carnet personnel exportable</li></ul>
+<div class="go"><span class="file">Presentation_Agents_IA_Hospitalier_v2.html</span><a class="btn btn-dark" href="Presentation_Agents_IA_Hospitalier_v2.html">Ouvrir la présentation →</a></div>
+</div>
+</article>
+<article class="res rv d2">
+<div class="cover cover-a"><canvas data-cover="build" aria-hidden="true"></canvas><span class="chip">Partie 2</span><div class="label"><small>Atelier pratique no-code</small><b>Créer son premier agent IA</b></div></div>
+<div class="body">
+<div class="meta"><span>12 étapes</span><span>≈ 6 h 25</span><span>87 tâches · 14 tests</span></div>
+<p>Un guide pas à pas dans Dify Cloud. Chaque participant construit Horizon Assistant, le relie à une base de procédures et à un outil annuaire, observe ses choix dans la trace, puis l’adapte à un besoin de son service.</p>
+<ul><li>Kit intégré : documents fictifs, instructions prêtes à copier, grille de tests</li><li>Exercices « casser le prompt » et « panne volontaire » pour apprendre par contraste</li><li>Version de secours documentaire si la publication d’outil n’est pas disponible</li><li>Carnet de conception, suivi de progression et bilan exportable</li></ul>
+<div class="go"><span class="file">Atelier_Agent_IA_Hospitalier_Dify.html</span><a class="btn btn-teal" href="Atelier_Agent_IA_Hospitalier_Dify.html">Ouvrir l’atelier →</a></div>
+</div>
+</article>
+</div>
+</div>
+</section>
+
+<section class="block" id="parcours">
+<div class="wrap">
+<div class="sechead rv"><p class="eyebrow">Le parcours</p><h2>De la première question au prototype présenté.</h2><p>Une progression continue : chaque notion vue en présentation devient une manipulation dans l’atelier.</p></div>
+<div class="journey">
+<div class="jstep rv"><div class="dot">1</div><h3>Présentation</h3><span class="dur">80 MIN</span><p>Moteur, consigne, sources, outils et preuve.</p></div>
+<div class="jstep rv d1"><div class="dot">2</div><h3>Préparer et instruire</h3><span class="dur">ÉTAPES 1 À 4</span><p>Mission, compte Dify, agent et instructions.</p></div>
+<div class="jstep rv d2"><div class="dot">3</div><h3>Sourcer et outiller</h3><span class="dur">ÉTAPES 5 À 9</span><p>Base documentaire, recherche, outil annuaire et trace.</p></div>
+<div class="jstep rv d3"><div class="dot">4</div><h3>Valider et présenter</h3><span class="dur">ÉTAPES 10 À 12</span><p>Grille de tests, publication et projet personnel.</p></div>
+</div>
+<div class="steps12" id="steps12"></div>
+<p class="legend rv"><i></i>Étapes enrichies d’un exercice d’apprentissage par contraste.</p>
+</div>
+</section>
+
+<section class="block enigma" id="enigme">
+<canvas id="enigmabg" aria-hidden="true"></canvas>
+<div class="wrap">
+<div class="sechead rv"><p class="eyebrow">Le fil rouge</p><h2>Où se trouve le bureau des admissions ?</h2><p>Deux réponses produites par un assistant. Toutes deux citent une source. Laquelle croiriez-vous ?</p></div>
+<div class="answers rv">
+<button class="ans" data-ok="0"><small>Réponse A</small><q>Rez-de-chaussée, code ADM-01. Source : ANN-04.</q><span class="verdict"></span></button>
+<button class="ans" data-ok="1"><small>Réponse B</small><q>Hall B, code INT-A02. Source : ANN-04, v1.0.</q><span class="verdict"></span></button>
+</div>
+<p class="reveal" id="reveal">La bonne réponse est B. Mais le plus intéressant est ailleurs : pourquoi l’assistant a-t-il produit A, avec une référence qui semblait si crédible ? L’enquête se mène dans la présentation, et chaque participant reproduit la panne dans l’atelier.</p>
+</div>
+</section>
+
+<section class="block">
+<div class="wrap">
+<div class="sechead rv"><p class="eyebrow">Nos engagements</p><h2>Un cadre sûr pour apprendre.</h2></div>
+<div class="commit">
+<div class="rv"><span class="e">🧪</span><b>Données fictives</b><p>Établissement, procédures et annuaire sont inventés. Aucune donnée patient.</p></div>
+<div class="rv d1"><span class="e">🩺</span><b>Aucune décision clinique</b><p>L’agent prépare et oriente ; le professionnel décide.</p></div>
+<div class="rv d2"><span class="e">🧾</span><b>Preuve observable</b><p>Une réponse se vérifie dans la source et dans la trace, jamais sur parole.</p></div>
+<div class="rv d3"><span class="e">🔒</span><b>Lecture seule</b><p>Aucun outil d’envoi, de réservation ou de modification de dossier n’est connecté.</p></div>
+</div>
+<p class="note rv">Le cadre éthique et réglementaire des données de santé est traité dans un module dédié de ce cours.</p>
+</div>
+</section>
+
+<section class="block" style="padding-top:0">
+<div class="final rv"><p class="eyebrow" style="color:var(--mint)">Prêt à commencer ?</p><h2>Ouvrez la présentation, puis passez à l’atelier.</h2><p>Les deux supports se projettent, se lisent sur ordinateur et s’impriment en PDF. Gardez-les dans le même dossier que cette page.</p><div class="cta"><a class="btn btn-primary" href="Presentation_Agents_IA_Hospitalier_v2.html">Commencer la présentation</a><a class="btn btn-ghost" href="Atelier_Agent_IA_Hospitalier_Dify.html">Aller à l’atelier</a></div></div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>HORIZON / IA · Module « Des assistants IA aux agents » · Version du 05 octobre 2026</span><span>Exemples et données entièrement fictifs · Aucune IA n’est contactée par ces pages</span></div></footer>
+
+<script>
+(()=>{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR=()=>Math.min(window.devicePixelRatio||1,2);
+function fit(c){const r=c.getBoundingClientRect(),d=DPR();c.width=Math.max(1,r.width*d);c.height=Math.max(1,r.height*d);const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return{w:r.width,h:r.height,x}}
+const visible=new Map();const io=new IntersectionObserver(es=>es.forEach(e=>visible.set(e.target,e.isIntersecting)),{threshold:0});
+function loop(canvas,draw){io.observe(canvas);let t0=performance.now();function f(t){if(visible.get(canvas)!==false&&!document.hidden)draw((t-t0)/1000);requestAnimationFrame(f)}if(reduce){draw(2.5)}else requestAnimationFrame(f)}
+
+/* Réseau de particules (fond du hero et de l’énigme) */
+function network(id,count,color){const c=document.getElementById(id);let S=fit(c),pts=[],mouse={x:-999,y:-999};
+function seed(){pts=Array.from({length:Math.round(count*S.w/1200)+12},()=>({x:Math.random()*S.w,y:Math.random()*S.h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.6}))}seed();
+addEventListener('resize',()=>{S=fit(c);seed()});
+c.parentElement.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});c.parentElement.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999});
+loop(c,()=>{const{x,w,h}=S;x.clearRect(0,0,w,h);for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);if(d<120){p.x+=dx/d*.9;p.y+=dy/d*.9}}
+for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<130){x.strokeStyle=`rgba(${color},${(1-d/130)*.35})`;x.lineWidth=1;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()}}
+for(const p of pts){x.fillStyle=`rgba(${color},.8)`;x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill()}})}
+network('bg',70,'125,225,200');network('enigmabg',45,'125,225,200');
+
+/* L’agent en action */
+const ac=document.getElementById('agent');let A=fit(ac);addEventListener('resize',()=>A=fit(ac));
+const N={Q:{x:.11,y:.5,l:'Question',i:'💬',r:20},G:{x:.43,y:.5,l:'Agent',i:'🧭',r:30},P:{x:.73,y:.2,l:'Procedures_Horizon',i:'📂',r:22},T:{x:.73,y:.8,l:'consulter_annuaire',i:'☎️',r:22},R:{x:.9,y:.5,l:'Réponse',i:'✅',r:20}};
+const E=[['Q','G'],['G','P'],['G','T'],['G','R']];
+const scen=[{q:'Quelles pièces pour une consultation programmée ?',c:'consulter la base Procedures_Horizon',t:['P'],a:'Pièce d’identité, confirmation du rendez-vous… · ACC-01, v1.0'},
+{q:'Où se trouve le bureau des admissions ?',c:'appeler l’outil consulter_annuaire',t:['T'],a:'Hall B, code fictif INT-A02 · ANN-04, v1.0'},
+{q:'La couverture manque : checklist et service à contacter ?',c:'procédures puis annuaire',t:['P','T'],a:'Checklist (brouillon) + bureau des admissions, Hall B'},
+{q:'Quel est le numéro du laboratoire ?',c:'appeler l’outil consulter_annuaire',t:['T'],a:'Cette information n’est pas définie dans les documents fournis.'}];
+let si=0,phase=-1,pStart=0,glow={},legs=[];
+function plan(s){const l=[['Q','G']];for(const k of s.t){l.push(['G',k],[k,'G'])}l.push(['G','R']);return l}
+const feed={q:document.querySelector('#f-q'),c:document.querySelector('#f-c'),a:document.querySelector('#f-a')};
+function say(el,txt){el.querySelector('span').textContent=txt;el.classList.add('on')}
+function start(t){const s=scen[si];legs=plan(s);phase=0;pStart=t;for(const k in feed)feed[k].classList.remove('on');setTimeout(()=>say(feed.q,s.q),reduce?0:150)}
+const LEG=1.05,HOLD=2.8;
+function P(k){return{x:N[k].x*A.w,y:N[k].y*A.h}}
+loop(ac,t=>{const{x,w,h}=A;if(phase<0)start(t);
+const s=scen[si];let el=t-pStart,leg=Math.floor(el/LEG),k=(el%LEG)/LEG;
+if(reduce){leg=legs.length-1;k=1;say(feed.q,s.q);say(feed.c,s.c);say(feed.a,s.a)}
+if(leg>=legs.length&&el>legs.length*LEG+HOLD){si=(si+1)%scen.length;start(t);return}
+if(leg===1&&!feed.c.classList.contains('on'))say(feed.c,s.c);
+if(leg>=legs.length&&!feed.a.classList.contains('on'))say(feed.a,s.a);
+x.clearRect(0,0,w,h);
+// grille
+x.strokeStyle='rgba(125,225,200,.05)';x.lineWidth=1;for(let gx=0;gx<w;gx+=28){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,h);x.stroke()}for(let gy=0;gy<h;gy+=28){x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke()}
+// arêtes
+const used=new Set(legs.map(l=>[l[0],l[1]].sort().join()));
+for(const[a,b]of E){const pa=P(a),pb=P(b),on=used.has([a,b].sort().join());x.strokeStyle=on?'rgba(125,225,200,.45)':'rgba(125,225,200,.12)';x.lineWidth=on?2:1.2;x.setLineDash(on?[]:[4,6]);x.beginPath();x.moveTo(pa.x,pa.y);
+const mx=(pa.x+pb.x)/2,my=(pa.y+pb.y)/2;x.quadraticCurveTo(mx,(a==='G'&&(b==='P'||b==='T'))?pb.y:my,pb.x,pb.y);x.stroke()}x.setLineDash([]);
+// impulsion
+const cur=Math.min(leg,legs.length-1);for(const key in glow)glow[key]*=.94;
+if(leg<legs.length){const[a,b]=legs[cur],pa=P(a),pb=P(b),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const ctrl=(a==='G'&&(b==='P'||b==='T'))?{x:(pa.x+pb.x)/2,y:pb.y}:(b==='G'&&(a==='P'||a==='T'))?{x:(pa.x+pb.x)/2,y:pa.y}:{x:(pa.x+pb.x)/2,y:(pa.y+pb.y)/2};
+const qp=u=>({x:(1-u)*(1-u)*pa.x+2*(1-u)*u*ctrl.x+u*u*pb.x,y:(1-u)*(1-u)*pa.y+2*(1-u)*u*ctrl.y+u*u*pb.y});
+for(let i=10;i>=0;i--){const u=Math.max(0,e-i*.025),p=qp(u);x.fillStyle=`rgba(242,184,107,${(1-i/10)*.55})`;x.beginPath();x.arc(p.x,p.y,4.5*(1-i/12),0,7);x.fill()}
+const p=qp(e);const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,18);g.addColorStop(0,'rgba(242,184,107,.9)');g.addColorStop(1,'rgba(242,184,107,0)');x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,18,0,7);x.fill();
+if(k>.85)glow[b]=1;if(k<.15)glow[a]=Math.max(glow[a]||0,.6)}else{glow.R=1}
+// nœuds
+const small=w<420;
+for(const key in N){const n=N[key],p=P(key),r=n.r*(small?.8:1),gl=glow[key]||0,active=key==='Q'||key==='G'||key==='R'||s.t.includes(key);
+if(gl>.02){const g=x.createRadialGradient(p.x,p.y,r*.6,p.x,p.y,r*2.6);g.addColorStop(0,`rgba(125,225,200,${.45*gl})`);g.addColorStop(1,'rgba(125,225,200,0)');x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,r*2.6,0,7);x.fill()}
+if(key==='G'){x.strokeStyle='rgba(125,225,200,.35)';x.lineWidth=1;x.beginPath();x.arc(p.x,p.y,r+8+Math.sin(t*2)*2,0,7);x.stroke()}
+x.fillStyle=active?'#123a48':'#0e2833';x.strokeStyle=active?'rgba(125,225,200,.9)':'rgba(125,225,200,.3)';x.lineWidth=2;x.beginPath();x.arc(p.x,p.y,r,0,7);x.fill();x.stroke();
+x.font=`${Math.round(r*.9)}px system-ui,"Segoe UI Emoji","Apple Color Emoji"`;x.textAlign='center';x.textBaseline='middle';x.fillStyle='#fff';x.fillText(n.i,p.x,p.y+1);
+x.font=`600 ${small?10:12}px Inter,system-ui,sans-serif`;x.fillStyle=active?'#d8eaee':'rgba(216,234,238,.45)';const ly=key==='P'?p.y-r-12:p.y+r+16;let lx=p.x;const tw=x.measureText(n.l).width;lx=Math.min(w-tw/2-6,Math.max(tw/2+6,lx));x.fillText(n.l,lx,ly)}
+});
+
+/* Couvertures animées */
+document.querySelectorAll('[data-cover]').forEach(c=>{let S=fit(c);addEventListener('resize',()=>S=fit(c));const kind=c.dataset.cover;
+loop(c,t=>{const{x,w,h}=S;x.clearRect(0,0,w,h);
+if(kind==='slides'){for(let i=0;i<7;i++){const ph=t*.35+i*.9,xx=w*.55+i*42-((t*18)%42),yy=h*.18+Math.sin(ph)*8;x.save();x.translate(xx,yy);x.rotate(-.08+Math.sin(ph)*.03);x.fillStyle=`rgba(255,255,255,${.05+i*.012})`;x.strokeStyle='rgba(125,225,200,.35)';x.lineWidth=1;x.beginPath();x.roundRect?x.roundRect(0,0,120,78,8):x.rect(0,0,120,78);x.fill();x.stroke();x.fillStyle='rgba(125,225,200,.5)';x.fillRect(12,14,50,6);x.fillStyle='rgba(255,255,255,.25)';x.fillRect(12,28,90,4);x.fillRect(12,38,70,4);x.fillRect(12,48,80,4);x.restore()}}
+else{const cols=12,gw=Math.min(30,(w*.5-6*(cols-1))/cols);for(let i=0;i<cols;i++){const filled=(t*1.4)%(cols+4)>i,hh=40+((i*37)%50);const xx=w*.36+i*(gw+6),yy=h*.62-hh;x.fillStyle=filled?(i===3||i===8?'rgba(242,184,107,.85)':'rgba(125,225,200,.75)'):'rgba(255,255,255,.12)';x.beginPath();x.roundRect?x.roundRect(xx,yy,gw,hh,5):x.rect(xx,yy,gw,hh);x.fill()}
+x.strokeStyle='rgba(255,255,255,.25)';x.beginPath();x.moveTo(w*.36,h*.62+.5);x.lineTo(w*.36+cols*(gw+6)-6,h*.62+.5);x.stroke()}
+const g=x.createLinearGradient(0,h*.4,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.35)');x.fillStyle=g;x.fillRect(0,0,w,h)})});
+
+/* 12 étapes */
+const steps=[['Cadrer la mission',15],['Préparer Dify Cloud',20],['Créer l’agent',25],['Instructions + casser le prompt',40,1],['Créer les connaissances',40],['Tester la recherche',20],['Relier les sources',40],['Construire l’outil annuaire',45],['Observer + panne volontaire',60,1],['Valider : 14 tests',30],['Publier le prototype',25],['Personnaliser le projet',25]];
+const box=document.getElementById('steps12');steps.forEach((s,i)=>{const d=document.createElement('a');d.className='s12 rv'+(s[2]?' star':'');d.href='Atelier_Agent_IA_Hospitalier_Dify.html#s'+(i+1);d.style.textDecoration='none';d.style.transitionDelay=(i%6)*.05+'s';d.innerHTML='<b>'+String(i+1).padStart(2,'0')+'</b><span></span><small>'+s[1]+' min</small>';d.querySelector('span').textContent=s[0];box.appendChild(d)});
+
+/* Énigme */
+document.querySelectorAll('.ans').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.ans').forEach(o=>{const ok=o.dataset.ok==='1';o.classList.add(ok?'right':'wrong');o.querySelector('.verdict').textContent=ok?'✔ Conforme au document ANN-04':'✘ Localisation et code inventés'});document.getElementById('reveal').classList.add('on')}));
+
+/* Apparitions, compteurs, navigation */
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rio.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.rv').forEach(e=>rio.observe(e));
+document.querySelectorAll('[data-count]').forEach(el=>{const n=+el.dataset.count;if(reduce)return;let s=null;el.textContent='0';const step=t=>{s=s||t;const k=Math.min(1,(t-s)/1400);el.textContent=Math.round(n*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step)};setTimeout(()=>requestAnimationFrame(step),300)});
+const nav=document.getElementById('topnav');const onS=()=>nav.classList.toggle('scrolled',scrollY>40);addEventListener('scroll',onS,{passive:true});onS();
+})();
+</script>
+</body>
+</html>
